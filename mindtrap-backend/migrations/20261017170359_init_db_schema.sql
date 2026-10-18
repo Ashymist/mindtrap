@@ -21,7 +21,7 @@ CREATE TABLE beliefs (
   event_id int references events (event_id),
   description text NOT NULL,
   believability_before varchar(5) NOT NULL,
-  believabilty_after varchar(5)
+  believability_after varchar(5)
   
 );
 
