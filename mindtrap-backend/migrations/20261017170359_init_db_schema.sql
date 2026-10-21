@@ -10,7 +10,7 @@ CREATE TABLE events (
 
 CREATE TABLE explanations (
   explanation_id int PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-  event_id int references events (event_id),
+  event_id int references events (event_id) ON DELETE CASCADE,
   description text NOT NULL,
   is_realistic boolean NOT NULL
 );
@@ -18,7 +18,7 @@ CREATE TABLE explanations (
 
 CREATE TABLE beliefs (
   belief_id int PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-  event_id int references events (event_id),
+  event_id int references events (event_id) ON DELETE CASCADE,
   description text NOT NULL,
   believability_before varchar(5) NOT NULL,
   believability_after varchar(5)
@@ -27,7 +27,7 @@ CREATE TABLE beliefs (
 
 CREATE TABLE rational_thoughts (
   thought_id int PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-  belief_id int references beliefs (belief_id),
+  belief_id int references beliefs (belief_id) ON DELETE CASCADE,
   description text NOT NULL,
   believability varchar(5)
 );
@@ -36,18 +36,18 @@ CREATE TABLE rational_thoughts (
 
 create table arguments(
   argument_id int PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-  belief_id int  references beliefs (belief_id),
+  belief_id int  references beliefs (belief_id) ON DELETE CASCADE,
   description text NOT NULL,
   is_positive boolean not NULL
 );
 
 create table emotions (
   emotion_id int PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-  event_id int references events (event_id),
+  event_id int references events (event_id) ON DELETE CASCADE,
   emotion_type varchar(255) NOT NULL,
   description text,
-  intensivity_before varchar(5) NOT NULL,
-  intensivity_after varchar(5)
+  intensity_before varchar(5) NOT NULL,
+  intensity_after varchar(5)
 );
 
 
