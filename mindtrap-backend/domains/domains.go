@@ -5,6 +5,7 @@ import (
 )
 
 type Chain struct {
+	Id              int
 	OccuredAt       time.Time
 	ActivatingEvent string
 	Response        string
@@ -16,11 +17,13 @@ type Chain struct {
 }
 
 type Explanation struct {
+	Id          int
 	Description string
 	IsRealistic bool
 }
 
 type Belief struct {
+	Id                      int
 	BeliefType              string
 	Desctiption             string
 	BelievabilityBefore     string
@@ -30,16 +33,19 @@ type Belief struct {
 }
 
 type Argument struct {
+	Id          int
 	Description string
 	IsPositive  bool
 }
 
 type RationalThought struct {
+	Id            int
 	Description   string
 	Believability string
 }
 
 type Emotion struct {
+	Id                int
 	EmotionType       string
 	Description       string
 	isHealthy         bool
