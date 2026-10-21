@@ -1,14 +1,15 @@
 package main
 
 import (
+	"context"
 	"database/sql"
 	"log"
 	"net/http"
-
-	//"context"
-	//"time"
+	"strconv"
+	"time"
 
 	"github.com/Ashymist/mindtrap/mindtrap-backend/dbutils"
+	. "github.com/Ashymist/mindtrap/mindtrap-backend/domains"
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
 )
@@ -16,8 +17,8 @@ import (
 func main() {
 	connString := "postgres://postgres:password@localhost:5433/postgres?sslmode=disable"
 
-	//ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	//defer cancel()
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
 
 	db, err := sql.Open("postgres", connString)
 
@@ -34,6 +35,9 @@ func main() {
 	router := gin.Default()
 
 	router.GET("/chains", func(c *gin.Context) { GetChains(c, db) })
+	router.GET("/chains/:id", func(c *gin.Context) { GetChain(c, db) })
+	router.POST("/chains", func(c *gin.Context) { AddChain(c, db, ctx) })
+	router.PUT("/chains/:id", func(c *gin.Context) { UpdateChain(c, db, ctx) })
 
 	router.Run("localhost:7000")
 }
@@ -49,4 +53,64 @@ func GetChains(c *gin.Context, db *sql.DB) {
 	}
 
 	c.JSON(http.StatusOK, chains)
+}
+
+func GetChain(c *gin.Context, db *sql.DB) {
+	idParam := c.Param("id")
+	id, err := strconv.Atoi(idParam)
+
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+	chain, err := dbutils.GetChainFromDb(db, id)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+
+	c.JSON(http.StatusOK, chain)
+}
+
+func AddChain(c *gin.Context, db *sql.DB, ctx context.Context) {
+	var chain Chain
+
+	if err := c.BindJSON(&chain); err != nil {
+		log.Fatal(err)
+		return
+	}
+
+	addedChain, err := dbutils.AddNewChainToDb(db, ctx, chain)
+
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+
+	c.JSON(http.StatusCreated, addedChain)
+}
+
+func UpdateChain(c *gin.Context, db *sql.DB, ctx context.Context) {
+	var chain Chain
+
+	if err := c.BindJSON(&chain); err != nil {
+		log.Fatal(err)
+		return
+	}
+
+	idParam := c.Param("id")
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+
+	chain.Id = id
+
+	err = dbutils.UpdateChainInDb(db, ctx, chain)
+
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
 }
