@@ -17,9 +17,6 @@ import (
 func main() {
 	connString := "postgres://postgres:password@localhost:5433/postgres?sslmode=disable"
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-
 	db, err := sql.Open("postgres", connString)
 
 	if err != nil {
@@ -36,8 +33,9 @@ func main() {
 
 	router.GET("/chains", func(c *gin.Context) { GetChains(c, db) })
 	router.GET("/chains/:id", func(c *gin.Context) { GetChain(c, db) })
-	router.POST("/chains", func(c *gin.Context) { AddChain(c, db, ctx) })
-	router.PUT("/chains/:id", func(c *gin.Context) { UpdateChain(c, db, ctx) })
+	router.POST("/chains", func(c *gin.Context) { AddChain(c, db) })
+	router.PUT("/chains/:id", func(c *gin.Context) { UpdateChain(c, db) })
+	router.DELETE("/chains/:id", func(c *gin.Context) { DeleteChain(c, db) })
 
 	router.Run("localhost:7000")
 }
@@ -48,7 +46,8 @@ func GetChains(c *gin.Context, db *sql.DB) {
 
 	chains, err := dbutils.GetChainsFromDb(db, query, doSortByDate)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -60,48 +59,60 @@ func GetChain(c *gin.Context, db *sql.DB) {
 	id, err := strconv.Atoi(idParam)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 	chain, err := dbutils.GetChainFromDb(db, id)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
 	c.JSON(http.StatusOK, chain)
 }
 
-func AddChain(c *gin.Context, db *sql.DB, ctx context.Context) {
+func AddChain(c *gin.Context, db *sql.DB) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
 	var chain Chain
 
 	if err := c.BindJSON(&chain); err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	addedChain, err := dbutils.AddNewChainToDb(db, ctx, chain)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
 	c.JSON(http.StatusCreated, addedChain)
 }
 
-func UpdateChain(c *gin.Context, db *sql.DB, ctx context.Context) {
+func UpdateChain(c *gin.Context, db *sql.DB) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
 	var chain Chain
 
 	if err := c.BindJSON(&chain); err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	idParam := c.Param("id")
 	id, err := strconv.Atoi(idParam)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -110,7 +121,29 @@ func UpdateChain(c *gin.Context, db *sql.DB, ctx context.Context) {
 	err = dbutils.UpdateChainInDb(db, ctx, chain)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+}
+
+func DeleteChain(c *gin.Context, db *sql.DB) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	idParam := c.Param("id")
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		log.Println(err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	err = dbutils.DeleteChainFromDb(db, ctx, id)
+	if err != nil {
+		log.Println(err)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 }

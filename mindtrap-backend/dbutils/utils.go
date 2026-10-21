@@ -46,7 +46,7 @@ type rowData struct {
 func AddNewChainToDb(db *sql.DB, ctx context.Context, chain Chain) (*Chain, error) {
 	tx, err := db.BeginTx(ctx, nil)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	defer tx.Rollback()
 	fmt.Println(chain.OccuredAt, chain.ActivatingEvent, chain.Response, chain.FutureAction, chain.Goal)
@@ -65,7 +65,7 @@ func AddNewChainToDb(db *sql.DB, ctx context.Context, chain Chain) (*Chain, erro
 	var newId int
 	err = tx.QueryRow(`INSERT INTO events (occured_at,activating_event,response) VALUES ($1,$2,$3) RETURNING event_id`, occuredAt, activatingEvent, response).Scan(&newId)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 		return nil, err
 	}
 
@@ -80,7 +80,7 @@ func AddNewChainToDb(db *sql.DB, ctx context.Context, chain Chain) (*Chain, erro
 	if len(futureAction) != 0 {
 		_, err := tx.Exec(`UPDATE events SET future_action=$1 WHERE event_id=$2`, futureAction, eventId)
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err)
 			return nil, err
 		}
 	}
@@ -94,7 +94,7 @@ func AddNewChainToDb(db *sql.DB, ctx context.Context, chain Chain) (*Chain, erro
 	if len(goal) != 0 {
 		_, err := tx.Exec(`UPDATE events SET goal=$1 WHERE event_id=$2`, goal, eventId)
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err)
 			return nil, err
 		}
 	}
@@ -111,7 +111,7 @@ func AddNewChainToDb(db *sql.DB, ctx context.Context, chain Chain) (*Chain, erro
 			var newBeliefId int
 			err := tx.QueryRow(`INSERT INTO beliefs (event_id,description, believability_before) VALUES ($1,$2,$3) RETURNING belief_id`, eventId, belief.Desctiption, belief.BelievabilityBefore).Scan(&newBeliefId)
 			if err != nil {
-				log.Fatal(err)
+				log.Println(err)
 				return nil, err
 			}
 
@@ -120,7 +120,7 @@ func AddNewChainToDb(db *sql.DB, ctx context.Context, chain Chain) (*Chain, erro
 			if len(believabilityAfter) != 0 {
 				_, err := tx.Exec(`UPDATE beliefs SET believability_after=$1 WHERE belief_id=$2`, believabilityAfter, newBeliefId)
 				if err != nil {
-					log.Fatal(err)
+					log.Println(err)
 					return nil, err
 				}
 			}
@@ -132,7 +132,7 @@ func AddNewChainToDb(db *sql.DB, ctx context.Context, chain Chain) (*Chain, erro
 					var newArgumentId int
 					err := tx.QueryRow(`INSERT INTO arguments (belief_id,description, is_positive) VALUES ($1,$2,$3) RETURNING argument_id`, newBeliefId, argument.Description, argument.IsPositive).Scan(&newArgumentId)
 					if err != nil {
-						log.Fatal(err)
+						log.Println(err)
 						return nil, err
 					}
 
@@ -146,7 +146,7 @@ func AddNewChainToDb(db *sql.DB, ctx context.Context, chain Chain) (*Chain, erro
 				var newRationalThoughtId int
 				err := tx.QueryRow(`INSERT INTO rational_thoughts (belief_id,description, believability) VALUES ($1,$2,$3) RETURNING thought_id`, newBeliefId, rationalThought.Description, rationalThought.Believability).Scan(&newRationalThoughtId)
 				if err != nil {
-					log.Fatal(err)
+					log.Println(err)
 					return nil, err
 				}
 				rationalThought = &RationalThought{Id: int(newRationalThoughtId), Description: rationalThought.Description, Believability: rationalThought.Believability}
@@ -170,7 +170,7 @@ func AddNewChainToDb(db *sql.DB, ctx context.Context, chain Chain) (*Chain, erro
 			var newExplanationId int16
 			err := tx.QueryRow(`INSERT INTO explanations (event_id, description, is_realistic) VALUES ($1,$2, $3) RETURNING explanation_id`, eventId, explanation.Description, explanation.IsRealistic).Scan(&newExplanationId)
 			if err != nil {
-				log.Fatal(err)
+				log.Println(err)
 				return nil, err
 			}
 			addedExplanations = append(addedExplanations, &Explanation{Id: int(newExplanationId), Description: explanation.Description, IsRealistic: explanation.IsRealistic})
@@ -187,7 +187,7 @@ func AddNewChainToDb(db *sql.DB, ctx context.Context, chain Chain) (*Chain, erro
 			var newEmotionId int
 			err := tx.QueryRow(`INSERT INTO emotions (event_id,emotion_type, description, intensity_before, intensity_after) VALUES ($1,$2,$3,$4,$5) RETURNING emotion_id`, eventId, emotion.EmotionType, emotion.Description, emotion.IntensityBefore, emotion.IntensityAfter).Scan(&newEmotionId)
 			if err != nil {
-				log.Fatal(err)
+				log.Println(err)
 				return nil, err
 			}
 
@@ -203,20 +203,20 @@ func AddNewChainToDb(db *sql.DB, ctx context.Context, chain Chain) (*Chain, erro
 func DeleteChainFromDb(db *sql.DB, ctx context.Context, chainId int) error {
 	tx, err := db.BeginTx(ctx, nil)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 		return err
 	}
 	defer tx.Rollback()
 	var resultId int
 	if err = tx.QueryRow(`SELECT event_id FROM events WHERE event_id = $1`, chainId).Scan(&resultId); err != nil {
-		log.Fatal(err)
+		log.Println(err)
 		return err
 	}
 
 	_, err = tx.Exec(`DELETE FROM events WHERE event_id = $1`, chainId)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 		return err
 	}
 	tx.Commit()
@@ -240,7 +240,7 @@ func GetChainsFromDb(db *sql.DB, query string, sortByDate bool) ([]*Chain, error
 	}
 	rows, err := db.Query(sqlQuery, "%"+query+"%")
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 		return nil, err
 	}
 	// saving results of query in memory
@@ -264,7 +264,7 @@ func GetChainFromDb(db *sql.DB, id int) (*Chain, error) {
 
 	rows, err := db.Query(sqlQuery, id)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 		return nil, err
 	}
 	// saving results of query in memory
@@ -281,29 +281,29 @@ func GetChainFromDb(db *sql.DB, id int) (*Chain, error) {
 func UpdateChainInDb(db *sql.DB, ctx context.Context, chain Chain) error {
 	tx, err := db.BeginTx(ctx, nil)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	defer tx.Rollback()
 
 	var resultId int
 	if err = tx.QueryRow(`SELECT event_id FROM events WHERE event_id = $1`, chain.Id).Scan(&resultId); err != nil {
-		log.Fatal(err)
+		log.Println(err)
 		return err
 	}
 	// delete all children
 	_, err = tx.Exec(`delete from beliefs b where event_id = $1`, resultId)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 		return err
 	}
 	_, err = tx.Exec(`delete from explanations e where e.event_id  = $1`, resultId)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 		return err
 	}
 	_, err = tx.Exec(`delete from emotions em where em.event_id = $1`, resultId)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 		return err
 	}
 	// create new children for chain
@@ -317,7 +317,7 @@ func UpdateChainInDb(db *sql.DB, ctx context.Context, chain Chain) error {
 
 	_, err = tx.Exec(`UPDATE events SET occured_at=$1,activating_event=$2,response=$3 WHERE event_id=$4`, occuredAt, activatingEvent, response, resultId)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 		return err
 	}
 
@@ -325,7 +325,7 @@ func UpdateChainInDb(db *sql.DB, ctx context.Context, chain Chain) error {
 
 	_, err = tx.Exec(`UPDATE events SET future_action=$1 WHERE event_id=$2`, chain.FutureAction, resultId)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 		return err
 	}
 
@@ -334,7 +334,7 @@ func UpdateChainInDb(db *sql.DB, ctx context.Context, chain Chain) error {
 
 	_, err = tx.Exec(`UPDATE events SET goal=$1 WHERE event_id=$2`, chain.Goal, resultId)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 		return err
 	}
 
@@ -347,7 +347,7 @@ func UpdateChainInDb(db *sql.DB, ctx context.Context, chain Chain) error {
 			var newBeliefId int
 			err := tx.QueryRow(`INSERT INTO beliefs (event_id,description, believability_before, believability_after) VALUES ($1,$2,$3,$4) RETURNING belief_id`, resultId, belief.Desctiption, belief.BelievabilityBefore, belief.BelievabilityAfter).Scan(&newBeliefId)
 			if err != nil {
-				log.Fatal(err)
+				log.Println(err)
 				return err
 			}
 			// go through every argument
@@ -356,7 +356,7 @@ func UpdateChainInDb(db *sql.DB, ctx context.Context, chain Chain) error {
 				if argument != nil {
 					_, err = tx.Exec(`INSERT INTO arguments (belief_id,description, is_positive) VALUES ($1,$2,$3)`, newBeliefId, argument.Description, argument.IsPositive)
 					if err != nil {
-						log.Fatal(err)
+						log.Println(err)
 						return err
 					}
 
@@ -368,7 +368,7 @@ func UpdateChainInDb(db *sql.DB, ctx context.Context, chain Chain) error {
 			if rationalThought != nil {
 				_, err = tx.Exec(`INSERT INTO rational_thoughts (belief_id,description, believability) VALUES ($1,$2,$3)`, newBeliefId, rationalThought.Description, rationalThought.Believability)
 				if err != nil {
-					log.Fatal(err)
+					log.Println(err)
 					return err
 				}
 			}
@@ -384,7 +384,7 @@ func UpdateChainInDb(db *sql.DB, ctx context.Context, chain Chain) error {
 		if explanation != nil {
 			_, err = tx.Exec(`INSERT INTO explanations (event_id, description, is_realistic) VALUES ($1,$2, $3)`, resultId, explanation.Description, explanation.IsRealistic)
 			if err != nil {
-				log.Fatal(err)
+				log.Println(err)
 				return err
 			}
 		}
@@ -394,7 +394,7 @@ func UpdateChainInDb(db *sql.DB, ctx context.Context, chain Chain) error {
 		if emotion != nil {
 			_, err = tx.Exec(`INSERT INTO emotions (event_id,emotion_type, description, intensity_before, intensity_after) VALUES ($1,$2,$3,$4,$5)`, resultId, emotion.EmotionType, emotion.Description, emotion.IntensityBefore, emotion.IntensityAfter)
 			if err != nil {
-				log.Fatal(err)
+				log.Println(err)
 				return err
 			}
 		}
@@ -522,12 +522,12 @@ func extractQueryRows(rows *sql.Rows) ([]rowData, error) {
 			&row.ExplanationDescription,
 			&row.ExplanationIsRealistic,
 		); err != nil {
-			log.Fatal(err)
+			log.Println(err)
 			return nil, err
 		}
 
 		if err := rows.Err(); err != nil {
-			log.Fatal(err)
+			log.Println(err)
 			return nil, err
 		}
 		queryResult = append(queryResult, row)
