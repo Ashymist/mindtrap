@@ -223,7 +223,7 @@ func DeleteChainFromDb(db *sql.DB, ctx context.Context, chainId int) error {
 	return nil
 }
 
-func GetChainsFromDb(db *sql.DB, query string, sortByDate bool) []*Chain {
+func GetChainsFromDb(db *sql.DB, query string, sortByDate bool) ([]*Chain, error) {
 
 	sqlQuery := `select * from events e
 		left join beliefs b on b.event_id = e.event_id
@@ -241,18 +241,19 @@ func GetChainsFromDb(db *sql.DB, query string, sortByDate bool) []*Chain {
 	rows, err := db.Query(sqlQuery, "%"+query+"%")
 	if err != nil {
 		log.Fatal(err)
+		return nil, err
 	}
 	// saving results of query in memory
-	queryResult, err := ExtractQueryRows(rows)
+	queryResult, err := extractQueryRows(rows)
 	if err != nil {
-		return nil
+		return nil, err
 	}
 	// extracting objects from rows
-	chains := ExtractChainsFromQueryRows(queryResult)
-	return chains
+	chains := extractChainsFromQueryRows(queryResult)
+	return chains, nil
 }
 
-func GetChainFromDb(db *sql.DB, id int) *Chain {
+func GetChainFromDb(db *sql.DB, id int) (*Chain, error) {
 	sqlQuery := `select * from events e
 		left join beliefs b on b.event_id = e.event_id
 		left join emotions em on em.event_id = e.event_id 
@@ -264,15 +265,16 @@ func GetChainFromDb(db *sql.DB, id int) *Chain {
 	rows, err := db.Query(sqlQuery, id)
 	if err != nil {
 		log.Fatal(err)
+		return nil, err
 	}
 	// saving results of query in memory
-	queryResult, err := ExtractQueryRows(rows)
+	queryResult, err := extractQueryRows(rows)
 	if err != nil {
-		return nil
+		return nil, err
 	}
 	// extracting objects from rows
-	chains := ExtractChainsFromQueryRows(queryResult)
-	return chains[0]
+	chains := extractChainsFromQueryRows(queryResult)
+	return chains[0], nil
 
 }
 
@@ -402,7 +404,7 @@ func UpdateChainInDb(db *sql.DB, ctx context.Context, chain Chain) error {
 	return nil
 }
 
-func ExtractChainsFromQueryRows(queryResult []rowData) []*Chain {
+func extractChainsFromQueryRows(queryResult []rowData) []*Chain {
 	chains := []*Chain{}
 	chainIds := make(map[int64]*Chain)
 
@@ -484,7 +486,7 @@ func ExtractChainsFromQueryRows(queryResult []rowData) []*Chain {
 	return chains
 }
 
-func ExtractQueryRows(rows *sql.Rows) ([]rowData, error) {
+func extractQueryRows(rows *sql.Rows) ([]rowData, error) {
 
 	queryResult := []rowData{}
 	var row rowData
