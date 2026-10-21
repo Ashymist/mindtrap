@@ -44,9 +44,9 @@ type RationalThought struct {
 }
 
 type Emotion struct {
-	Id                int    `json:"id"`
-	EmotionType       string `json:"emotion_type"`
-	Description       string `json:"description"`
-	IntensivityBefore string `json:"intensity_before"`
-	IntensivityAfter  string `json:"intensity_after"`
+	Id              int    `json:"id"`
+	EmotionType     string `json:"emotion_type"`
+	Description     string `json:"description"`
+	IntensityBefore string `json:"intensity_before"`
+	IntensityAfter  string `json:"intensity_after"`
 }
