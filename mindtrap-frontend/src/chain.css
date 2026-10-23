@@ -1,0 +1,17 @@
+.chain {
+    min-height: 100px;
+    width: 100%;
+    display:grid;
+    grid-template-columns: 2fr 2fr 2fr 2fr 2fr 2fr 1fr;
+    grid-template-rows: 1fr;
+
+    border-top: solid #5a5953 1px;
+}
+
+.cell {
+    padding-left: 20px;
+    padding-top: 15px;
+
+    font-family: "Roboto Condensed", sans-serif;
+    color: #5a5953;
+}

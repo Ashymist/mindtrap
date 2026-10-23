@@ -1,0 +1,7 @@
+.top_box {
+    height:70px;
+    border: solid #5a5953 2px;
+    box-sizing: border-box;
+    display: flex;
+    padding: 12px;
+} 
