@@ -1,6 +1,7 @@
 import './chain-box.css'
 import Chain from './Chain.jsx'
-function ChainBox(){
+import ChainScrollWindow from './ChainScrollWindow.jsx'
+function ChainBox({chains}){
     return(
         <div className="chain_box">
             <div className='column_grid'>
@@ -12,16 +13,7 @@ function ChainBox(){
                 <div className='column_name' id='column_name6'>G - Goal</div>
                 <div className='column_name' id='column_name7'>Date</div>
             </div>
-            <div className='chain_scroll_window'>
-                <Chain></Chain>
-                <Chain></Chain>
-                <Chain></Chain>
-                <Chain></Chain>
-                <Chain></Chain>
-                <Chain></Chain>
-                <Chain></Chain>
-                <Chain></Chain>
-            </div> 
+            <ChainScrollWindow chains={chains}></ChainScrollWindow>
         </div>
     );
 }

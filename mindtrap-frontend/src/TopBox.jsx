@@ -2,10 +2,10 @@ import "./top-box.css"
 import SearchBar from './SearchBar.jsx'
 import GeneralButton from "./GeneralButton.jsx";
 
-function TopBox(props){
+function TopBox({state, setChains}){
     let content;
     const initialState = <>
-                            <SearchBar></SearchBar>
+                            <SearchBar setChains={setChains}></SearchBar>
                             <GeneralButton text="blabla"></GeneralButton>
                             </>;
     return(
