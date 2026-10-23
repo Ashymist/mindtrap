@@ -10,6 +10,7 @@ import (
 
 	"github.com/Ashymist/mindtrap/mindtrap-backend/dbutils"
 	. "github.com/Ashymist/mindtrap/mindtrap-backend/domains"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
 )
@@ -30,6 +31,10 @@ func main() {
 	}
 
 	router := gin.Default()
+
+	config := cors.DefaultConfig()
+	config.AllowOrigins = []string{"http://localhost:5173"}
+	router.Use(cors.New(config))
 
 	router.GET("/chains", func(c *gin.Context) { GetChains(c, db) })
 	router.GET("/chains/:id", func(c *gin.Context) { GetChain(c, db) })
