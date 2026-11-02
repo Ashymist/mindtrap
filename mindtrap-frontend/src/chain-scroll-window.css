@@ -1,6 +1,6 @@
 .chain_scroll_window{
     flex:1;
-    width:100%;
+    width:calc(100% + 60px);
     min-height: 0;
     overflow: auto;
 }

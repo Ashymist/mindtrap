@@ -3,5 +3,17 @@
     border: solid #5a5953 2px;
     box-sizing: border-box;
     display: flex;
-    padding: 12px;
+    align-items: center;
+    padding-left: 20px;
+    padding-top: 12px;
+    padding-bottom: 12px;
 } 
+
+.top_text{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-family: "Roboto Condensed", sans-serif;
+    color: #5a5953;
+    font-size: 18px;
+}

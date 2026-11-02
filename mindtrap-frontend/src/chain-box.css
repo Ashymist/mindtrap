@@ -6,13 +6,15 @@
     box-sizing: border-box;
     margin-top: 35px;
     min-height: 0;
+    overflow: scroll;
+    overflow-x: hidden;
 }
 
 .column_grid{
     display: grid;
     grid-template-columns: 2fr 2fr 2fr 2fr 2fr 2fr 1fr;
     grid-template-rows: 1fr;
-    height: 50px;
+    min-height: 50px;
 }
 
 .column_name{
@@ -30,3 +32,292 @@
     grid-column: 1/2;
 }
 
+#active{
+    background-color: #5a5953;
+    color:white
+}
+
+.activating_event_description{
+    margin-left: 20px;
+    margin-top: 20px;
+    margin-right: 20px;
+    height: 100px;
+    font-family: "Roboto Condensed", sans-serif;
+    color: #5a5953;
+    font-size: 20px;
+    resize: none;
+}
+
+.datepicker{
+    
+    font-family: "Roboto Condensed", sans-serif;
+    color: #5a5953;
+    font-size: 20px;
+    height: 40px;
+    width:250px;
+    box-sizing: border-box;
+}
+
+.datepicker_container{
+    margin-top: 20px;
+    margin-left: 20px;
+    height: 40px;
+    width: 250px;
+}
+
+.button_container{
+    margin-top:auto;
+    margin-left: auto;
+    margin-right: 20px;
+    margin-bottom:20px;
+    display: flex;
+    flex-direction: row;
+    height: 30px;
+}
+
+.belief_textarea{
+    min-height: 30px;
+    margin-left: 20px;
+    width: 400px;
+    font-family: "Roboto Condensed", sans-serif;
+    color: #5a5953;
+    font-size: 17px;
+    resize: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+
+.new_belief_prompt{
+    margin-top: 20px;
+}
+
+.belief_container{
+    font-family: "Roboto Condensed", sans-serif;
+    color: #5a5953;
+    font-size: 17px;
+    display: flex;
+    min-height: 50px;
+    align-items: center;
+}
+
+.text_container{
+    margin-left: 20px;
+}
+
+.believability_input {
+    min-height: 30px;
+    width: 20px;
+    margin-left: 10px;
+    font-family: "Roboto Condensed", sans-serif;
+    color: #5a5953;
+    font-size: 17px;
+    display: flex;
+    justify-content: center;
+}
+
+.delete_belief_button{
+    margin-left: auto;
+}
+
+.emotion_container{
+    font-family: "Roboto Condensed", sans-serif;
+    color: #5a5953;
+    font-size: 17px;
+    display: flex;
+    min-height: 50px;
+    align-items: center;
+}
+
+.emotion_textarea{
+    min-height: 30px;
+    margin-left: 20px;
+    width: 400px;
+    font-family: "Roboto Condensed", sans-serif;
+    color: #5a5953;
+    font-size: 17px;
+    resize: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.intensity_input {
+    min-height: 30px;
+    width: 20px;
+    margin-left: 10px;
+    font-family: "Roboto Condensed", sans-serif;
+    color: #5a5953;
+    font-size: 17px;
+    display: flex;
+    justify-content: center;
+}
+
+.delete_emotion_button{
+    margin-left: auto;
+}
+
+.new_emotion_prompt{
+    margin-top: 20px;
+}
+
+.emotion_description{
+    margin-top: 10px;
+    margin-left: 20px;
+    margin-bottom: 20px;
+    width: 500px;
+    resize: none;
+    font-family: "Roboto Condensed", sans-serif;
+    color: #5a5953;
+    font-size: 17px;
+}
+
+.belief_argument_container{
+    margin-top: 10px;
+    margin-bottom:10px;
+    margin-left: 20px;
+    margin-right: 20px;
+    border: solid #5a5953 1px;
+    padding: 10px;
+}
+
+.belief_header{
+    padding: 10px;
+    font-family: "Roboto Condensed", sans-serif;
+    color: #5a5953;
+    font-size: 25px;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.argumentation_container{
+    padding-left: 10px;
+    padding-right:10px;
+    display: flex;
+
+}
+
+.argumentation_for{
+    width: 50%;
+    border: solid #5a5953 1px;
+    min-height: 50px;
+    margin-right: 10px;
+    padding: 10px;
+}
+
+.argumentation_against{
+    padding: 10px;
+    width: 50%;
+    border: solid #5a5953 1px;
+    min-height: 50px;
+    margin-left: 10px;
+}
+
+.argument_row{
+    display:flex;
+    margin-bottom: 10px;
+}
+
+
+.chain_box > * {
+    flex-shrink: 0;
+    
+}
+
+.argument_textarea{
+    flex:1;
+    font-family: "Roboto Condensed", sans-serif;
+    color: #5a5953;
+    font-size: 17px;
+    width: auto;
+}
+
+.response_description{
+    height: 100px;
+    margin-top: 10px;
+    margin-left: 20px;
+    margin-bottom: 20px;
+    width: 1000px;
+    resize: none;
+    font-family: "Roboto Condensed", sans-serif;
+    color: #5a5953;
+    font-size: 17px;
+}
+
+.explanations_container{
+    
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 20px;
+    margin-right: 20px;
+    border: solid #5a5953 1px;
+    padding: 10px;
+}
+
+.explanation_row{
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    font-family: "Roboto Condensed", sans-serif;
+    color: #5a5953;
+    font-size: 17px;
+}
+
+.explanation_area{
+    resize: none;
+    width: 500px;
+    font-family: "Roboto Condensed", sans-serif;
+    color: #5a5953;
+    font-size: 17px;
+}
+
+.realistic_checkbox{
+width: 20px;
+height: 20px;
+margin-right: 50px;
+}
+
+.rational_thought_area{
+    width:1000px;
+    resize: none;
+    font-family: "Roboto Condensed", sans-serif;
+    color: #5a5953;
+    font-size: 17px;
+    flex:1
+}
+
+.future_action_area{
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 10px;
+    font-family: "Roboto Condensed", sans-serif;
+    color: #5a5953;
+    font-size: 17px;
+    resize: none;
+    min-height: 100px;
+}
+
+.goal_area{
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 10px;
+    font-family: "Roboto Condensed", sans-serif;
+    color: #5a5953;
+    font-size: 17px;
+    resize: none;
+    min-height: 100px;
+}
+
+.rational_row{
+    display:flex;
+    align-items: center;
+    font-family: "Roboto Condensed", sans-serif;
+    color: #5a5953;
+    font-size: 17px;
+}
+
+/* let the chain list extend past the right border so delete buttons sit outside the box */
+.chain_box:has(> .chain_scroll_window) {
+    overflow: visible;
+}

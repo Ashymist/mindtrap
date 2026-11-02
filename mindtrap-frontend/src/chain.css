@@ -1,4 +1,10 @@
+.chain_row {
+    display: flex;
+    align-items: center;
+}
+
 .chain {
+    flex: 1;
     min-height: 100px;
     width: 100%;
     display:grid;
@@ -8,10 +14,35 @@
     border-top: solid #5a5953 1px;
 }
 
+.chain:hover{
+    cursor: pointer;
+}
+
 .cell {
     padding-left: 20px;
     padding-top: 15px;
 
     font-family: "Roboto Condensed", sans-serif;
     color: #5a5953;
+}
+
+.rational_row{
+    margin-bottom: 10px;
+}
+
+.delete_button {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    margin-left: 10px;
+    margin-right: 10px;
+    border: solid #5a5953 1px;
+    background-color: #F34B80;
+    color: white;
+    font-family: "Roboto Condensed", sans-serif;
+    font-size: 20px;
+}
+
+.delete_button:hover {
+    cursor: pointer;
 }

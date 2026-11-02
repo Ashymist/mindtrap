@@ -234,10 +234,11 @@ func GetChainsFromDb(db *sql.DB, query string, sortByDate bool) ([]*Chain, error
 	where  exists (
 		select 1 from emotions em2
 		where em2.event_id = e.event_id and em2.emotion_type LIKE $1
-	)`
-	if sortByDate {
+	)
+	order by e.event_id`
+	/*if sortByDate {
 		sqlQuery += `order by e.occured_at DESC`
-	}
+	}*/
 	rows, err := db.Query(sqlQuery, "%"+query+"%")
 	if err != nil {
 		log.Println(err)

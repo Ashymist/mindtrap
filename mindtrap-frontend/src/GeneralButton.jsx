@@ -1,8 +1,8 @@
 import './general-button.css'
-function GeneralButton(props){
-    const greenButton = <div className="general_button" id="green_button">{props.text}</div>;
-    const redButton = <div className="general_button" id="red_button">{props.text}</div>;
-    return(props.color == "red" ? redButton : greenButton);
+function GeneralButton({text,color, setState}){
+    const greenButton = <button onClick={setState} className="general_button" id="green_button">{text}</button>;
+    const redButton = <button onClick={setState} className="general_button" id="red_button">{text}</button>;
+    return(color == "red" ? redButton : greenButton);
 }
 
 export default GeneralButton
